@@ -22,11 +22,7 @@ public class MemberServiceImpl implements MemberService{
         if (memberRepository.existsByName(dto.getName())){
             throw new IllegalArgumentException("Member Id already exists");
         }
-        Member member = Member.builder()
-                            .name(dto.getName())
-                            .password(dto.getPassword())
-                            .phone(dto.getPhone())
-                            .build();
+        Member member = Member.toEntity(dto);
 
         return memberRepository.save(member);
     }
@@ -46,7 +42,7 @@ public class MemberServiceImpl implements MemberService{
         Optional<Member> optionalMember = memberRepository.findById(id);
         if(optionalMember.isPresent()){
             Member member = optionalMember.get();
-            member.updateMember(dto.getPassword(), dto.getPhone());
+            member.updateMember(dto);
             return memberRepository.save(member);
         } else {
             throw new IllegalArgumentException("Member not exists");

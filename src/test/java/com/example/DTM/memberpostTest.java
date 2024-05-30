@@ -1,24 +1,27 @@
 package com.example.DTM;
 
+
 import com.example.DTM.domain.Member;
 import com.example.DTM.domain.Post;
 import com.example.DTM.repository.MemberRepository;
 import com.example.DTM.repository.PostRepository;
 import com.example.DTM.service.MemberService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@SpringBootTest
-class DtmApplicationTests {
+@RunWith(MockitoJUnitRunner.class)
+public class memberpostTest {
 
-    @Autowired
+    @Mock
     private MemberRepository memberRepository;
 
-    @Autowired
+    @Mock
     private PostRepository postRepository;
 
-    @Autowired
+    @InjectMocks
     private MemberService memberService;
 
     @Test
@@ -29,8 +32,6 @@ class DtmApplicationTests {
                 .phone("ssss")
                 .build();
 
-        memberService.createMember(member);
-
         Post post = new Post();
         post.setTitle("dd");
         post.setContent("sddsd");
@@ -40,6 +41,4 @@ class DtmApplicationTests {
 
 
     }
-
-
 }

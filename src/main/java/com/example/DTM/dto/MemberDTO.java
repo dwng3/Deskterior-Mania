@@ -9,21 +9,20 @@ import lombok.Setter;
 @Setter
 public class MemberDTO {
 
+    private String name;
+    private String password;
+    private String phone;
+
     @Getter
     @Setter
     @AllArgsConstructor
     @Builder
-    public static class MemberSignupDTO{
-        private String name;
-        private String password;
-        private String phone;
+    public static class MemberSignupDTO extends MemberDTO{
     }
 
     @Getter
     @Setter
-    public static class MemberUpdateDTO{
-        private String password;
-        private String phone;
+    public static class MemberUpdateDTO extends MemberDTO {
     }
 
 }
