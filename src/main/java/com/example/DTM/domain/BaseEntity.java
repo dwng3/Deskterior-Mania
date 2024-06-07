@@ -20,7 +20,6 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
-    // Getters and setters
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }

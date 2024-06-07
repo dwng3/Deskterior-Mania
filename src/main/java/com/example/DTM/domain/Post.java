@@ -1,7 +1,7 @@
 package com.example.DTM.domain;
 
 
-import com.example.DTM.dto.PostDTO;
+import com.example.DTM.dto.post.PostUpdateDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,45 +24,25 @@ public class Post extends BaseEntity{
 
     private String title;
 
-    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String imagePath;
 
-    @ColumnDefault("0")
-    private Long viewCount;
-
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private Member author;
-
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Builder
-    public Post(String title, String content, String imagePath) {
+    public Post(String title, String content, String imagePath, Member member) {
         this.title = title;
         this.content = content;
         this.imagePath = imagePath;
+        this.member = member;
     }
 
-    @Builder
-    public Post(String title, String content, String imagePath, Member author) {
-        this.title = title;
-        this.content = content;
-        this.imagePath = imagePath;
-        this.author = author;
-    }
-
-    public void updatePost(PostDTO dto) {
+    public void update(PostUpdateDTO dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
         this.imagePath = dto.getImagePath();
-    }
-
-    public static Post toEntity(PostDTO dto){
-        return Post.builder()
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .imagePath(dto.getImagePath())
-                .build();
     }
 }

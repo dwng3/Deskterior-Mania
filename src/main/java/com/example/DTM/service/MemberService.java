@@ -1,17 +1,17 @@
 package com.example.DTM.service;
 
 import com.example.DTM.domain.Member;
-import com.example.DTM.dto.MemberDTO;
-
+import com.example.DTM.dto.member.MemberResponseDTO;
+import com.example.DTM.dto.member.MemberSignupDTO;
+import com.example.DTM.dto.member.MemberUpdateDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MemberService {
 
-    public Member createMember(MemberDTO.MemberSignupDTO dto);
-    public List<Member> getAllMembers();
-    public Optional<Member> getMemberById(Long id);
-    public Member updateMember(Long id, MemberDTO.MemberUpdateDTO dto);
+    public Member singup(MemberSignupDTO dto);
+    public List<MemberResponseDTO> getAllMembers();
+    public MemberResponseDTO getMemberById(Long id);
+    public void updateMember(Long id, MemberUpdateDTO dto);
     public void deleteMember(Long id);
 }

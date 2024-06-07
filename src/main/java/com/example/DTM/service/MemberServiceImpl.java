@@ -1,14 +1,16 @@
 package com.example.DTM.service;
 
 import com.example.DTM.domain.Member;
-import com.example.DTM.dto.MemberDTO;
+import com.example.DTM.dto.member.MemberResponseDTO;
+import com.example.DTM.dto.member.MemberSignupDTO;
+import com.example.DTM.dto.member.MemberUpdateDTO;
 import com.example.DTM.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
@@ -17,36 +19,46 @@ public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
 
+
     @Override
-    public Member createMember(MemberDTO.MemberSignupDTO dto) {
-        if (memberRepository.existsByName(dto.getName())){
-            throw new IllegalArgumentException("Member Id already exists");
+    public Member singup(MemberSignupDTO dto) {
+        if(memberRepository.existsByUsername(dto.getUsername())){
+            throw new IllegalArgumentException("Username already exists");
         }
-        Member member = Member.toEntity(dto);
+
+        Member member = Member.builder()
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .nickname(dto.getNickname())
+                .build();
 
         return memberRepository.save(member);
     }
 
     @Override
-    public List<Member> getAllMembers() {
-        return memberRepository.findAll();
+    public List<MemberResponseDTO> getAllMembers() {
+        List<Member> members = memberRepository.findAll();
+        return members.stream()
+                .map(member -> new MemberResponseDTO(member.getUsername(),member.getNickname()))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<Member> getMemberById(Long id) {
-        return memberRepository.findById(id);
+    public MemberResponseDTO getMemberById(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        return MemberResponseDTO.builder()
+                    .username(member.getUsername())
+                    .nickname(member.getNickname())
+                    .build();
     }
 
     @Override
-    public Member updateMember(Long id, MemberDTO.MemberUpdateDTO dto) {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        if(optionalMember.isPresent()){
-            Member member = optionalMember.get();
-            member.updateMember(dto);
-            return memberRepository.save(member);
-        } else {
-            throw new IllegalArgumentException("Member not exists");
-        }
+    public void updateMember(Long id, MemberUpdateDTO dto) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+            member.update(dto);
+            memberRepository.save(member);
     }
 
     @Override

@@ -1,52 +1,64 @@
 package com.example.DTM.domain;
 
 
-import com.example.DTM.dto.MemberDTO;
+import com.example.DTM.dto.member.MemberUpdateDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @Entity
-public class Member extends BaseEntity{
+public class Member extends BaseEntity {
 
     @Id
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(updatable = false, nullable = false)
-    private String name;
+    private String username;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    private String nickname;
+
     private String phone;
 
-    @OneToMany(mappedBy = "author")
-    private List<Post> posts;
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    private List<Post> posts = new ArrayList<>();
 
     @Builder
-    public Member(String name, String password, String phone) {
-        this.name = name;
+    public Member(String username, String password, String nickname) {
+        this.username = username;
         this.password = password;
-        this.phone = phone;
+        this.nickname = nickname;
     }
 
-    public void updateMember(MemberDTO dto) {
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setMember(this);
+    }
+
+    public void removePost(Post post){
+        posts.remove(post);
+        post.setMember(null);
+    }
+
+    public void update(MemberUpdateDTO dto) {
         this.password = dto.getPassword();
+        this.nickname = dto.getNickname();
         this.phone = dto.getPhone();
     }
 
-    public static Member toEntity(MemberDTO dto){
-        return Member.builder()
-                .name(dto.getName())
-                .password(dto.getPassword())
-                .phone(dto.getPhone())
-                .build();
-    }
+
 }

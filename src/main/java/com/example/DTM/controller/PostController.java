@@ -1,7 +1,9 @@
 package com.example.DTM.controller;
 
-import com.example.DTM.domain.Post;
-import com.example.DTM.dto.PostDTO;
+import com.example.DTM.dto.post.PostDetailDTO;
+import com.example.DTM.dto.post.PostResponseDTO;
+import com.example.DTM.dto.post.PostUpdateDTO;
+import com.example.DTM.dto.post.PostWriteDTO;
 import com.example.DTM.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -9,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -18,31 +19,40 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts(){
-        List<Post> postList = postService.getAllPosts();
-        return ResponseEntity.ok(postList);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Post>> getPostById(@PathVariable Long id){
-        Optional<Post> post = postService.getPostById(id);
-        return ResponseEntity.ok(post);
-    }
-
     @PostMapping
-    public ResponseEntity<String> createPost(@RequestBody PostDTO dto){
-        postService.createPost(dto);
+    public ResponseEntity<String> writePost(@RequestBody PostWriteDTO dto) {
+        postService.writePost(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("Post creation success");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody PostDTO dto) {
-        Optional<Post> optionalPost = postService.getPostById(id);
-        Post post = optionalPost.get();
-        post.updatePost(dto);
+    @GetMapping
+    public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
+        List<PostResponseDTO> posts = postService.getAllPosts();
+        return ResponseEntity.ok(posts);
+    }
 
-        return ResponseEntity.ok("update success");
+    @GetMapping("/{memberId}")
+    public ResponseEntity<List<PostResponseDTO>> getPostsByMemberId(@PathVariable("memberId")Long memberId) {
+        List<PostResponseDTO> posts = postService.getPostsByMemberId(memberId);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/{memberId}/{id}")
+    public ResponseEntity<PostDetailDTO> getPostDetail(@PathVariable("id")Long id) {
+        PostDetailDTO post = postService.getDetailPost(id);
+        return ResponseEntity.ok(post);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updatePost(@PathVariable("id")Long id, @RequestBody PostUpdateDTO dto) {
+        postService.updatePost(id,dto);
+        return ResponseEntity.ok("Update Success");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable("id")Long id) {
+        postService.deletePost(id);
+        return ResponseEntity.ok("Delete Success");
     }
 
 }
