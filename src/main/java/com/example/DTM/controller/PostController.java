@@ -31,12 +31,6 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<List<PostResponseDTO>> getPostsByMemberId(@PathVariable("memberId")Long memberId) {
-        List<PostResponseDTO> posts = postService.getPostsByMemberId(memberId);
-        return ResponseEntity.ok(posts);
-    }
-
     @GetMapping("/{memberId}/{id}")
     public ResponseEntity<PostDetailDTO> getPostDetail(@PathVariable("id")Long id) {
         PostDetailDTO post = postService.getDetailPost(id);

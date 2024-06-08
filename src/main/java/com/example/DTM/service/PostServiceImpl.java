@@ -52,15 +52,6 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<PostResponseDTO> getPostsByMemberId(Long memberId) {
-        List<Post> posts = postRepository.findByMemberId(memberId);
-        return posts.stream()
-                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getNickname()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public PostDetailDTO getDetailPost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));

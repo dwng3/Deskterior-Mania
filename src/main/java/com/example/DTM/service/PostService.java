@@ -11,7 +11,6 @@ import java.util.List;
 public interface PostService {
     public Post writePost(PostWriteDTO dto);
     public List<PostResponseDTO> getAllPosts();
-    public List<PostResponseDTO> getPostsByMemberId(Long memberId);
     public PostDetailDTO getDetailPost(Long id);
     public void updatePost(Long id, PostUpdateDTO dto);
     public void deletePost(Long id);

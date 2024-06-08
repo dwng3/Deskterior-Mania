@@ -4,6 +4,7 @@ import com.example.DTM.domain.Member;
 import com.example.DTM.dto.member.MemberResponseDTO;
 import com.example.DTM.dto.member.MemberSignupDTO;
 import com.example.DTM.dto.member.MemberUpdateDTO;
+import com.example.DTM.dto.post.PostResponseDTO;
 
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface MemberService {
     public MemberResponseDTO getMemberById(Long id);
     public void updateMember(Long id, MemberUpdateDTO dto);
     public void deleteMember(Long id);
+    public List<PostResponseDTO> getPostsByMemberId(Long memberId);
 }

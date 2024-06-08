@@ -1,10 +1,13 @@
 package com.example.DTM.service;
 
 import com.example.DTM.domain.Member;
+import com.example.DTM.domain.Post;
 import com.example.DTM.dto.member.MemberResponseDTO;
 import com.example.DTM.dto.member.MemberSignupDTO;
 import com.example.DTM.dto.member.MemberUpdateDTO;
+import com.example.DTM.dto.post.PostResponseDTO;
 import com.example.DTM.repository.MemberRepository;
+import com.example.DTM.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
 
     @Override
@@ -64,5 +68,14 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void deleteMember(Long id) {
         memberRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostResponseDTO> getPostsByMemberId(Long memberId) {
+        List<Post> posts = postRepository.findByMemberId(memberId);
+        return posts.stream()
+                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getNickname()))
+                .collect(Collectors.toList());
     }
 }

@@ -3,7 +3,9 @@ package com.example.DTM.controller;
 import com.example.DTM.dto.member.MemberResponseDTO;
 import com.example.DTM.dto.member.MemberSignupDTO;
 import com.example.DTM.dto.member.MemberUpdateDTO;
+import com.example.DTM.dto.post.PostResponseDTO;
 import com.example.DTM.service.MemberService;
+import com.example.DTM.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final PostService postService;
 
     @PostMapping
     public ResponseEntity<String> signup(@RequestBody MemberSignupDTO dto) {
@@ -47,5 +50,10 @@ public class MemberController {
         return ResponseEntity.ok("delete success");
     }
 
+    @GetMapping("/{memberId}/posts")
+    public ResponseEntity<List<PostResponseDTO>> getPostsByMemberId(@PathVariable("memberId")Long memberId) {
+        List<PostResponseDTO> posts = memberService.getPostsByMemberId(memberId);
+        return ResponseEntity.ok(posts);
+    }
 
 }
