@@ -5,10 +5,11 @@ import com.example.DTM.dto.member.MemberResponseDTO;
 import com.example.DTM.dto.member.MemberSignupDTO;
 import com.example.DTM.dto.member.MemberUpdateDTO;
 import com.example.DTM.dto.post.PostResponseDTO;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 
-public interface MemberService {
+public interface MemberService extends UserDetailsService {
 
     public Member singup(MemberSignupDTO dto);
     public List<MemberResponseDTO> getAllMembers();

@@ -9,20 +9,27 @@ import com.example.DTM.dto.post.PostResponseDTO;
 import com.example.DTM.repository.MemberRepository;
 import com.example.DTM.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member singup(MemberSignupDTO dto) {
@@ -32,8 +39,9 @@ public class MemberServiceImpl implements MemberService{
 
         Member member = Member.builder()
                 .username(dto.getUsername())
-                .password(dto.getPassword())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
+                .phone(dto.getPhone())
                 .build();
 
         return memberRepository.save(member);
@@ -77,5 +85,13 @@ public class MemberServiceImpl implements MemberService{
         return posts.stream()
                 .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getNickname()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+
+        return new org.springframework.security.core.userdetails.User(member.getUsername(), member.getPassword(), Collections.singletonList(new SimpleGrantedAuthority(member.getRole())));
     }
 }
