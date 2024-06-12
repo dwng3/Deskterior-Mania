@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class Post extends BaseEntity{
     private List<Image> images = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    private PostCategory postCategory;
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_id")
@@ -48,10 +47,11 @@ public class Post extends BaseEntity{
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Post(String title, String content, Member member) {
+    public Post(String title, String content, Member member, Category category) {
         this.title = title;
         this.content = content;
         this.member = member;
+        this.category = category;
     }
 
     public void update(PostUpdateDTO dto) {

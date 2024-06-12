@@ -1,5 +1,6 @@
 package com.example.DTM.dto.post;
 
+import com.example.DTM.domain.Category;
 import lombok.*;
 
 @Getter
@@ -11,5 +12,6 @@ public class PostResponseDTO {
 
     private String title;
     private String author;
+    private Category category;
 
 }
