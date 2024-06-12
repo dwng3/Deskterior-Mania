@@ -1,8 +1,9 @@
 package com.example.DTM.service;
 
+import com.example.DTM.domain.Image;
 import com.example.DTM.domain.Member;
 import com.example.DTM.domain.Post;
-import com.example.DTM.dto.member.MemberResponseDTO;
+import com.example.DTM.domain.Category;
 import com.example.DTM.dto.post.PostDetailDTO;
 import com.example.DTM.dto.post.PostResponseDTO;
 import com.example.DTM.dto.post.PostUpdateDTO;
@@ -33,10 +34,14 @@ public class PostServiceImpl implements PostService{
         Post post = Post.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .imagePath(dto.getImagePath())
+                .category(dto.getCategory())
                 .member(member)
                 .build();
 
+        for (String imagePath : dto.getImagePaths()) {
+            Image image = new Image(imagePath);
+            post.addImage(image);
+        }
         member.addPost(post);
 
         return postRepository.save(post);
@@ -47,7 +52,15 @@ public class PostServiceImpl implements PostService{
     public List<PostResponseDTO> getAllPosts() {
         List<Post> posts  = postRepository.findAll();
         return posts.stream()
-                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getUsername()))
+                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getUsername(),post.getCategory()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PostResponseDTO> getPostsByCategory(Category category) {
+        List<Post> posts =  postRepository.findByPostCategory(category);
+        return posts.stream()
+                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getUsername(),post.getCategory()))
                 .collect(Collectors.toList());
     }
 
@@ -58,9 +71,11 @@ public class PostServiceImpl implements PostService{
         PostDetailDTO dto = PostDetailDTO.builder()
                 .title(post.getTitle())
                 .content(post.getContent())
-                .imagePath(post.getImagePath())
+                .images(post.getImages())
                 .author(post.getMember().getNickname())
+                .category(post.getCategory())
                 .build();
+
 
         return dto;
     }

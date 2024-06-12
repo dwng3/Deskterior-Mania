@@ -1,6 +1,6 @@
 package com.example.DTM.domain;
 
-public enum PostCategory {
+public enum Category {
     DESK_SETUP,
     EQUIPMENT_INFO
 }

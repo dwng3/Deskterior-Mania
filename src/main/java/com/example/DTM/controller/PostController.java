@@ -1,5 +1,7 @@
 package com.example.DTM.controller;
 
+import com.example.DTM.domain.Category;
+import com.example.DTM.domain.Post;
 import com.example.DTM.dto.post.PostDetailDTO;
 import com.example.DTM.dto.post.PostResponseDTO;
 import com.example.DTM.dto.post.PostUpdateDTO;
@@ -31,7 +33,15 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @GetMapping("/{memberId}/{id}")
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<PostResponseDTO>> getPostByCategory(@PathVariable String category) {
+        Category categoryEnum = Category.valueOf(category.toUpperCase());
+        List<PostResponseDTO> posts = postService.getPostsByCategory(categoryEnum);
+        return ResponseEntity.ok(posts);
+    }
+
+
+    @GetMapping("/{id}")
     public ResponseEntity<PostDetailDTO> getPostDetail(@PathVariable("id")Long id) {
         PostDetailDTO post = postService.getDetailPost(id);
         return ResponseEntity.ok(post);
