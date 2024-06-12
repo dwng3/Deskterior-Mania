@@ -1,6 +1,7 @@
 package com.example.DTM.service;
 
 import com.example.DTM.domain.Member;
+import com.example.DTM.domain.MemberRole;
 import com.example.DTM.domain.Post;
 import com.example.DTM.dto.member.MemberResponseDTO;
 import com.example.DTM.dto.member.MemberSignupDTO;
@@ -37,6 +38,7 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalArgumentException("Username already exists");
         }
 
+
         Member member = Member.builder()
                 .username(dto.getUsername())
                 .password(passwordEncoder.encode(dto.getPassword()))
@@ -69,6 +71,8 @@ public class MemberServiceImpl implements MemberService {
     public void updateMember(Long id, MemberUpdateDTO dto) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
             member.update(dto);
             memberRepository.save(member);
     }
@@ -87,11 +91,11 @@ public class MemberServiceImpl implements MemberService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
-        return new org.springframework.security.core.userdetails.User(member.getUsername(), member.getPassword(), Collections.singletonList(new SimpleGrantedAuthority(member.getRole())));
-    }
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        Member member = memberRepository.findByUsername(username)
+//                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+//
+//        return new org.springframework.security.core.userdetails.User(member.getUsername(), member.getPassword(), Collections.singletonList(new SimpleGrantedAuthority(member.getRole())));
+//    }
 }

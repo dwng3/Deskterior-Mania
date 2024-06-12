@@ -6,12 +6,18 @@ import com.example.DTM.dto.member.MemberUpdateDTO;
 import com.example.DTM.dto.post.PostResponseDTO;
 import com.example.DTM.service.MemberService;
 import com.example.DTM.service.PostService;
+import com.example.DTM.validator.SignupValidator;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 @RestController
@@ -19,9 +25,18 @@ public class MemberController {
 
     private final MemberService memberService;
     private final PostService postService;
+    private final SignupValidator signupValidator;
 
     @PostMapping
-    public ResponseEntity<String> signup(@RequestBody MemberSignupDTO dto) {
+    public ResponseEntity<String> signup(@Valid @RequestBody MemberSignupDTO dto, BindingResult result) {
+        signupValidator.validate(dto,result);
+        if(result.hasErrors()){
+            StringBuilder errorMessage = new StringBuilder();
+            for (ObjectError error : result.getAllErrors()) {
+                errorMessage.append(error.getDefaultMessage()).append("; ");
+            }
+            return ResponseEntity.badRequest().body(errorMessage.toString());
+        }
         memberService.singup(dto);
         return ResponseEntity.ok("Signup success");
     }

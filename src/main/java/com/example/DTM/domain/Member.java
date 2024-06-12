@@ -4,16 +4,18 @@ package com.example.DTM.domain;
 import com.example.DTM.dto.member.MemberUpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
 @Builder
+@DynamicInsert
 public class Member extends BaseEntity {
 
     @Id
@@ -30,22 +32,21 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private String phone;
-
-    @Column(nullable = false)
-    private String role = MemberRole.MEMBER.getValue();
+    @Builder.Default
+    private MemberRole role = MemberRole.MEMBER;
 
     @OneToMany
     @JoinColumn(name = "member_id")
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
-    public Member(String username, String password, String nickname, String phone) {
+    public Member(String username, String password, String nickname) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.phone = phone;
     }
 
     public void addPost(Post post) {
@@ -59,9 +60,8 @@ public class Member extends BaseEntity {
     }
 
     public void update(MemberUpdateDTO dto) {
-        this.password = dto.getPassword();
+        this.password =  dto.getPassword();
         this.nickname = dto.getNickname();
-        this.phone = dto.getPhone();
     }
 
 
