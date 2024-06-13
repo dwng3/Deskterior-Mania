@@ -26,6 +26,4 @@ public class MemberSignupDTO {
     @NotEmpty(message = "닉네임은 필수항목입니다.")
     private String nickname;
 
-    @NotEmpty(message = "전화번호는 필수항목입니다.")
-    private String phone;
 }

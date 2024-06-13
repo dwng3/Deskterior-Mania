@@ -52,15 +52,15 @@ public class PostServiceImpl implements PostService{
     public List<PostResponseDTO> getAllPosts() {
         List<Post> posts  = postRepository.findAll();
         return posts.stream()
-                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getUsername(),post.getCategory()))
+                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getUsername(),post.getCategory(),post.getViewCount()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<PostResponseDTO> getPostsByCategory(Category category) {
-        List<Post> posts =  postRepository.findByPostCategory(category);
+        List<Post> posts =  postRepository.findByCategory(category);
         return posts.stream()
-                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getUsername(),post.getCategory()))
+                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getUsername(),post.getCategory(),post.getViewCount()))
                 .collect(Collectors.toList());
     }
 
@@ -74,8 +74,9 @@ public class PostServiceImpl implements PostService{
                 .images(post.getImages())
                 .author(post.getMember().getNickname())
                 .category(post.getCategory())
+                .likeCount(post.getLikeCount())
+                .comments(post.getComments())
                 .build();
-
 
         return dto;
     }

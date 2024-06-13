@@ -11,5 +11,4 @@ public class MemberUpdateDTO {
 
     String password;
     String nickname;
-    String phone;
 }

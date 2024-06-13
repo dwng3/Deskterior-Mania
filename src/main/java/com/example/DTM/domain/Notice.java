@@ -1,7 +1,5 @@
 package com.example.DTM.domain;
 
-import com.example.DTM.dto.notice.NoticeUpdateDTO;
-import com.example.DTM.dto.post.PostUpdateDTO;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Notice {
+public class Notice extends BaseEntity {
 
     @Id
     @Column(name = "notice_id")
@@ -42,10 +40,20 @@ public class Notice {
         this.member = member;
     }
 
-    public void update(NoticeUpdateDTO dto) {
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
+    public void addImage(Image image) {
+        images.add(image);
+        image.setNotice(this);
     }
+
+    public void removeImage(Image image) {
+        images.remove(image);
+        image.setNotice(null);
+    }
+
+//    public void update(NoticeUpdateDTO dto) {
+//        this.title = dto.getTitle();
+//        this.content = dto.getContent();
+//    }
 
 
 }

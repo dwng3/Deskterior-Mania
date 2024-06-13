@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
@@ -29,8 +30,10 @@ public class Post extends BaseEntity{
 
     private String content;
 
+    @ColumnDefault("0")
     private Long likeCount;
 
+    @ColumnDefault("0")
     private Long viewCount;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -57,6 +60,7 @@ public class Post extends BaseEntity{
     public void update(PostUpdateDTO dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
+        this.images = dto.getImages();
     }
 
     public void addImage(Image image) {

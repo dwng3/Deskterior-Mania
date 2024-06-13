@@ -42,7 +42,7 @@ public class PostController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDetailDTO> getPostDetail(@PathVariable("id")Long id) {
+    public ResponseEntity<PostDetailDTO> getDetailPost(@PathVariable("id")Long id) {
         PostDetailDTO post = postService.getDetailPost(id);
         return ResponseEntity.ok(post);
     }

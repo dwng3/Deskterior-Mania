@@ -1,4 +1,4 @@
-package com.example.DTM.dto.notice;
+package com.example.DTM.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,11 +7,12 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
-public class NoticeResponseDTO {
+@Getter
+public class CommentWriteDTO {
 
-    private String title;
-    private String author;
+    private String content;
+    private Long memberId;
+    private Long postId;
 
 }

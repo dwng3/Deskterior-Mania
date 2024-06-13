@@ -37,13 +37,10 @@ public class MemberServiceImpl implements MemberService {
         if(memberRepository.existsByUsername(dto.getUsername())){
             throw new IllegalArgumentException("Username already exists");
         }
-
-
         Member member = Member.builder()
                 .username(dto.getUsername())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
-                .phone(dto.getPhone())
                 .build();
 
         return memberRepository.save(member);
@@ -87,7 +84,7 @@ public class MemberServiceImpl implements MemberService {
     public List<PostResponseDTO> getPostsByMemberId(Long memberId) {
         List<Post> posts = postRepository.findByMemberId(memberId);
         return posts.stream()
-                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getNickname()))
+                .map(post -> new PostResponseDTO(post.getTitle(),post.getMember().getNickname(),post.getCategory(),post.getViewCount()))
                 .collect(Collectors.toList());
     }
 
