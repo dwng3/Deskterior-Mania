@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,5 +19,5 @@ public class PostWriteDTO {
     private String content;
     private Category category;
     private Long memberId;
-    private List<String> imagePaths;
+    private List<MultipartFile> images;
 }

@@ -25,8 +25,14 @@ public class Image extends BaseEntity{
     @JoinColumn(name = "notice_id")
     private Notice notice;
 
-    public Image(String imagePath) {
+    public Image(String imagePath, Post post) {
         this.imagePath = imagePath;
+        this.post = post;
+    }
+
+    public Image(String imagePath, Notice notice) {
+        this.imagePath = imagePath;
+        this.notice = notice;
     }
 
 }

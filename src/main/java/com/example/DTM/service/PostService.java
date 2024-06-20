@@ -10,7 +10,7 @@ import com.example.DTM.dto.post.PostWriteDTO;
 import java.util.List;
 
 public interface PostService {
-    public Post writePost(PostWriteDTO dto);
+    public void writePost(PostWriteDTO dto);
     public List<PostResponseDTO> getAllPosts();
     public List<PostResponseDTO> getPostsByCategory(Category category);
     public PostDetailDTO getDetailPost(Long id);

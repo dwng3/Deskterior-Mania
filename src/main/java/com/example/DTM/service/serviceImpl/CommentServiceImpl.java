@@ -1,4 +1,4 @@
-package com.example.DTM.service;
+package com.example.DTM.service.serviceImpl;
 
 import com.example.DTM.domain.Comment;
 import com.example.DTM.domain.Member;
@@ -7,6 +7,7 @@ import com.example.DTM.dto.comment.CommentWriteDTO;
 import com.example.DTM.repository.CommentRepository;
 import com.example.DTM.repository.MemberRepository;
 import com.example.DTM.repository.PostRepository;
+import com.example.DTM.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;

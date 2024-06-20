@@ -1,7 +1,6 @@
-package com.example.DTM.service;
+package com.example.DTM.service.serviceImpl;
 
 import com.example.DTM.domain.Member;
-import com.example.DTM.domain.MemberRole;
 import com.example.DTM.domain.Post;
 import com.example.DTM.dto.member.MemberResponseDTO;
 import com.example.DTM.dto.member.MemberSignupDTO;
@@ -9,17 +8,12 @@ import com.example.DTM.dto.member.MemberUpdateDTO;
 import com.example.DTM.dto.post.PostResponseDTO;
 import com.example.DTM.repository.MemberRepository;
 import com.example.DTM.repository.PostRepository;
+import com.example.DTM.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 

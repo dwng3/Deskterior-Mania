@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,6 +18,6 @@ public class NoticeWriteDTO {
     private String title;
     private String content;
     private Long memberId;
-    private List<String> imagePaths;
+    private List<MultipartFile> images;
 
 }

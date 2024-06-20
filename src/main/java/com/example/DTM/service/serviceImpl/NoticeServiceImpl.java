@@ -1,47 +1,69 @@
-package com.example.DTM.service;
+package com.example.DTM.service.serviceImpl;
 
 import com.example.DTM.domain.Image;
 import com.example.DTM.domain.Member;
 import com.example.DTM.domain.Notice;
-import com.example.DTM.domain.Post;
 import com.example.DTM.dto.notice.NoticeDetailDTO;
 import com.example.DTM.dto.notice.NoticeResponseDTO;
 import com.example.DTM.dto.notice.NoticeUpdateDTO;
 import com.example.DTM.dto.notice.NoticeWriteDTO;
-import com.example.DTM.dto.post.PostResponseDTO;
+import com.example.DTM.repository.ImageRepository;
 import com.example.DTM.repository.MemberRepository;
 import com.example.DTM.repository.NoticeRepository;
+import com.example.DTM.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class NoticeServiceImpl implements NoticeService{
+public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final MemberRepository memberRepository;
+    private final ImageRepository imageRepository;
+    private final Path rootLocation = Paths.get("uploads");
 
     @Override
-    public Notice writeNotice(NoticeWriteDTO dto) {
+    public void writeNotice(NoticeWriteDTO dto) {
         Member member = memberRepository.findById(dto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
-        Notice notice = Notice.builder()
-                .title(dto.getTitle())
-                .content(dto.getContent())
-                .member(member)
-                .build();
+        try {
+            Notice notice = Notice.builder()
+                    .title(dto.getTitle())
+                    .content(dto.getContent())
+                    .member(member)
+                    .build();
 
-        for (String imagePath : dto.getImagePaths()) {
-            Image image = new Image(imagePath);
-            notice.addImage(image);
+            List<MultipartFile> images = dto.getImages();
+            List<Image> imageEntities = new ArrayList<>();
+            for (MultipartFile image : images) {
+                if (!Files.exists(rootLocation)) {
+                    Files.createDirectories(rootLocation);
+                }
+                Path destinationFile = rootLocation.resolve(
+                                Paths.get(image.getOriginalFilename()))
+                        .normalize().toAbsolutePath();
+                image.transferTo(destinationFile);
+
+                // Image 엔티티 생성 및 저장
+                Image imageEntity = new Image(destinationFile.toString(), notice);
+                imageEntities.add(imageEntity);
+            }
+            imageRepository.saveAll(imageEntities);
+            member.addNotice(notice);
+            noticeRepository.save(notice);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to store file", e);
         }
-        member.addNotice(notice);
-
-        return noticeRepository.save(notice);
     }
 
     @Override

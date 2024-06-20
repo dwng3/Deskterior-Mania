@@ -15,7 +15,7 @@ import java.util.List;
 
 public interface NoticeService {
 
-    public Notice writeNotice(NoticeWriteDTO dto);
+    public void writeNotice(NoticeWriteDTO dto);
     public List<NoticeResponseDTO> getAllNotices();
     public NoticeDetailDTO getDetailNotice(Long id);
     public void updateNotice(Long id, NoticeUpdateDTO dto);
